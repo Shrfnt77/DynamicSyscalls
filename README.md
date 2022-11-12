@@ -1,9 +1,7 @@
 <h1 align="center">
 DynamicSyscalls
 </h1>
-<h1 align="center">
-<img src="images/image1.png"><br>
-</h1>
+
 
 DynamicSyscalls is a library written in .net resolves the syscalls dynamically (Has nothing to do with hooking/unhooking) 
  
@@ -13,10 +11,10 @@ DynamicSyscalls is a library written in .net resolves the syscalls dynamically (
 - Windows server 2019 Build 1089
 - Windows 7 service pack 1
 
-### Examples
-* ProcessHollowing
-* ProcessInjection
-* ProcessInjection2
+### Code Examples
+* [ProcessHollowing](Examples/ProcessHollowing)
+* [ProcessInjection](Examples/ProcessInjection)
+* [ProcessInjection2](Examples/ProcessInjection2)
 
 
 ### Calling NtCreateUserProcess Example
@@ -38,3 +36,6 @@ if (NtCreateSuccess != 0)
 
 ```
 
+<h1 align="center">
+<img src="images/image1.png"><br>
+</h1>
