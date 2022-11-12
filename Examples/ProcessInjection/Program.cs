@@ -72,7 +72,7 @@ namespace ProcessInjection
             }
             #endregion
 
-            #region FreeMemory
+            #region Cleaning
             Close(hProcess);
             DynamicInvoke.FreeMemory();
             #endregion

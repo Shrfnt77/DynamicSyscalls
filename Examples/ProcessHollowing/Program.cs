@@ -6,8 +6,6 @@ namespace ProcessHollowing
     {
         static void Main(string[] args)
         {
-          
-            
             ProcessHollowing.Execute(File.ReadAllBytes("c:\\windows\\system32\\cmd.exe"), "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\CasPol.exe", "/c calc.exe");
         }
     }

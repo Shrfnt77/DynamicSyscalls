@@ -10,7 +10,7 @@ namespace DynamicSyscalls
         /// <summary>
         /// Global System Calls Entries
         /// </summary>
-        private static List<SystemCallEntries> SystemCallsTabel = new List<SystemCallEntries>();
+        private static List<SystemCallEntry> SystemCallsTabel = new List<SystemCallEntry>();
 
         /// <summary>
         /// Global Allocated PROCs 
@@ -38,7 +38,7 @@ namespace DynamicSyscalls
         private static byte[] Resolve(string FunctionName, bool IsHash)
         {
             // query the global entries 
-            SystemCallEntries systemCall = ((IsHash) ? SystemCallsTabel.Where(x => x.Hash == FunctionName) : SystemCallsTabel.Where(x => x.Name == FunctionName)).FirstOrDefault();
+            SystemCallEntry systemCall = ((IsHash) ? SystemCallsTabel.Where(x => x.Hash == FunctionName) : SystemCallsTabel.Where(x => x.Name == FunctionName)).FirstOrDefault();
             if (systemCall == null)
             {
                 throw new Exception($"Cannot Resolve {FunctionName}");
@@ -87,7 +87,7 @@ namespace DynamicSyscalls
             foreach (KeyValuePair<int, string> item in sysCallsFunctions.OrderBy(x => x.Key))
             {
 
-                SystemCallsTabel.Add(new SystemCallEntries() {Name = item.Value , Hash = Helper.GetMd5(item.Value) , Number = count++ });
+                SystemCallsTabel.Add(new SystemCallEntry() {Name = item.Value , Hash = Helper.GetMd5(item.Value) , Number = count++ });
             }
         }
 
@@ -106,7 +106,7 @@ namespace DynamicSyscalls
             Marshal.Copy(systemcallbytes, 0, hAllocated, systemcallbytes.Length);
 
             // the only native call we have lol
-            Native.VirtualProtect(hAllocated, ((uint)systemcallbytes.Length), 0x40, out _);
+            Native.VirtualProtect(hAllocated, ((uint)systemcallbytes.Length), Native.ExecuteReadWrite, out _);
             
             return Marshal.GetDelegateForFunctionPointer<T>(hAllocated);
         }
@@ -118,12 +118,12 @@ namespace DynamicSyscalls
         /// <param name="Parameters"></param>
         /// <param name="IsHash"></param>
         /// <returns></returns>
-        public static object Invoke<T>(string FunctionName, object[] Parameters, bool IsHash) where T : Delegate
+        public static object Invoke<T>(string FunctionName, ref object[] Parameters, bool IsHash) where T : Delegate
         {
             byte[] systemcallbytes = Resolve(FunctionName, IsHash);
             IntPtr hAllocated = Marshal.AllocHGlobal(systemcallbytes.Length);
             Marshal.Copy(systemcallbytes, 0, hAllocated, systemcallbytes.Length);
-            Native.VirtualProtect(hAllocated, ((uint)systemcallbytes.Length), 0x40, out _);
+            Native.VirtualProtect(hAllocated, ((uint)systemcallbytes.Length), Native.ExecuteReadWrite, out _);
             object ret = Marshal.GetDelegateForFunctionPointer(hAllocated, typeof(T)).DynamicInvoke(Parameters);
             Marshal.FreeHGlobal(hAllocated);
             return ret;
@@ -145,9 +145,9 @@ namespace DynamicSyscalls
 
 
         /// <summary>
-        /// SystemCallEntries that holds the function names and md5(function_name) and syscall number 
+        /// SystemCallEntry that holds the function name and md5(function_name) and syscall number 
         /// </summary>
-        private class SystemCallEntries
+        private class SystemCallEntry
         {
             public string Name { get; set; }
             public string Hash { get; set; }
