@@ -3,7 +3,7 @@ DynamicSyscalls
 </h1>
 
 
-DynamicSyscalls is a library written in .net resolves the syscalls dynamically (Has nothing to do with hooking/unhooking) 
+DynamicSyscalls is a library written in .net resolves the syscalls dynamically (Has nothing to do with hooking/unhooking) only support x64 arch
  
 ### Tested operating systems 
 - Windows 11 22H2
